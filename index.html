@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html>
+    <body>
+        <script>
+            (function() {
+                // Create Canvas
+                const canvas = document.createElement("canvas");
+                canvas.width = 600;
+                canvas.height = 600;
+                document.body.appendChild(canvas)
+                const ctx = canvas.getContext("2d");
+                
+                function belongsInSet(x,y) {
+                    var real = x;
+                    var imaginary = y;
+                    const maxIterations = 100;
+                    for(var i = 0; i < maxIterations; i++) {
+                        var tempReal = real * real - imaginary * imaginary + x;
+                        var tempImaginary = 2 * real * imaginary + y;
+                        
+                        real = tempReal;
+                        imaginary = tempImaginary;
+                    
+                        if(real * imaginary > 5){
+                            return (i/maxIterations * 100)
+                        }
+                    }
+                    return 0;
+                }
+                
+                var magnificationFactor = 2900;
+                var panX = 0.7;
+                var panY = 0.6;
+                for(var x = 0; x < canvas.width; x++){
+                    for(y = 0; y < canvas.height; y++){
+                        var inSet = belongsInSet(x/magnificationFactor - panX, y/magnificationFactor - panY);
+                        if(inSet == 0){
+                            ctx.fillStyle = '#000';
+                            ctx.fillRect(x,y,1,1); // draw black pixel
+                        } else {
+                            ctx.fillStyle = 'hsl(0, 100%, ' + inSet + '%)';
+                            ctx.fillRect(x,y,1,1);
+                        }
+                    }
+                }
+            })();
+        </script>
+    </body>
+</html>
